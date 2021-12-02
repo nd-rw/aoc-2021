@@ -1,14 +1,16 @@
 import { input } from '../data/day1';
 
-type threeMeasurementArray = readonly [number, number, number];
+type threeValueMeasurement = readonly number[];
 
 export const dayOne = () => {
   const splitInput = splitInputData(input);
   const numProceedingIncreases = getNumProceedingIncreases(splitInput);
-  convertToThreeMeasurementArray(splitInput);
+  const threeMeasurementArray = convertToThreeMeasurementArray(splitInput);
+  const numProceedingThreeMeasurementIncreases = getNumProceedingThreeMeasurementIncreases(threeMeasurementArray)
   // TODO continuing part 2 of day 1
   // for each run getThreeMeasurementSum(), then compare to prior :)
-  return numProceedingIncreases;
+  return {
+    'partOne': numProceedingIncreases, 'partTwo': numProceedingThreeMeasurementIncreases}
 }
 
 const splitInputData = (stringData: string) => {
@@ -22,21 +24,42 @@ const getNumProceedingIncreases = (values: readonly string[]) => {
 
 }
 
-const getThreeMeasurementSum = (inputArray: threeMeasurementArray) => {
-  return inputArray.reduce((a, b) => a + b)
-}
-
-const convertToThreeMeasurementArray = (inputData:readonly string[]) => {
-  return inputData.map((element, index) => {
+const convertToThreeMeasurementArray = (inputData: readonly string[]) => {
+  const threeMeasurementArray = inputData.map((element, index) => {
     if (index >= 3) {
       if (index % 3 === 0) {
-        return [inputData[index -2], inputData[index - 1], element]
+        return [Number(inputData[index -2]), Number(inputData[index - 1]), Number(element)]
       } else {
-        return;
+        return null
       }
     } else {
-      return;
+      return null;
     }
   })
+
+  if (threeMeasurementArray.every(element => element === null)) {
+    return null;
+  } else {
+    return threeMeasurementArray;
+  }
+  
+};
+
+const getThreeMeasurementSum = (input: threeValueMeasurement | null) => {
+  return input === null ? 0 : input.reduce((a, b) => a + b)
+}
+
+const getNumProceedingThreeMeasurementIncreases = (inputArray: readonly (readonly number[] | null)[] | readonly threeValueMeasurement[] | null) => {
+  if (inputArray === null || inputArray.every(element => element === null)) {
+    return 0;
+  } else {
+    if (inputArray.length > 0) {
+      return inputArray.filter((element: any, index: number) =>
+      !index || (getThreeMeasurementSum(inputArray[index - 1]) < getThreeMeasurementSum(element))
+    ).length
+    } else {
+      return 0;
+    }
+  }
 }
 

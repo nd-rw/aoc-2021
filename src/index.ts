@@ -2,13 +2,14 @@ export * from './lib/async';
 export * from './lib/number';
 import { dayOne} from './aoc/day1';
 
-type resultTypes = number | string;
+type resultTypes = any;
 type resultDict = { readonly [key: number]: resultTypes };
 
 const daysCompleted = 1;
 
 const getResult = (dayNum:number) => {
-  const results: resultDict = {1: dayOne()}
+  const { partOne, partTwo } = dayOne();
+  const results: resultDict = { 1: [partOne, partTwo]}
   return results[dayNum];
 }
 
