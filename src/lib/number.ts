@@ -20,6 +20,7 @@
  * @anotherNote Some other value.
  */
 export const double = (value: number) => {
+  console.log('double');
   return value * 2;
 };
 
